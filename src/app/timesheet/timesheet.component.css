@@ -1,0 +1,78 @@
+th{
+    color:#010101!important
+}
+
+
+button{
+    border-color: aliceblue;
+}
+
+
+form-control{
+    border-color: #010101!important;
+}
+
+input{
+    border-color:  #A0BEC5!important;
+}
+
+input:hover{
+    border-color: rgb(55, 189, 219)!important;
+}
+
+select{
+    border-color:  #A0BEC5!important;
+}
+
+select:hover{
+    border-color: rgb(55, 189, 219)!important;
+}
+
+table {
+    width: 100%;
+  }
+
+
+  th{
+    color:#010101!important;
+    border-bottom-style: solid!important;
+
+}
+
+td{
+    border-bottom-style: groove!important;
+    /* font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-style: italic; */
+}
+  .mat-cell {
+    color: rgb(133, 128, 128);
+  }
+  .mat-header-cell {
+    background-color:  #2122228a;
+    text-transform: capitalize;
+    font-size:  1em;
+    color: rgb(145, 130, 130);
+  }
+  .mat-header-cell h6 {
+    font-weight: bold;
+    text-transform: capitalize;
+  }
+  .mat-paginator {
+    background-color: whitesmoke;
+    color: rgb(0, 0, 0);
+    font: weight 1;
+  }
+  .mat-table {
+    background-color: #58184500;
+    
+  }
+  button.excel{
+    background-color: dodgerblue;
+    float: right;
+    border-radius: 10px;
+
+}
+
+imgData{
+  opacity: 1;
+}

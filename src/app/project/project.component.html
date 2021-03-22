@@ -1,0 +1,134 @@
+<div id="main-content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <div class="row clearfix">
+                <div class="col-md-6 col-sm-12">
+                    <h1>Projects</h1>
+                </div>
+                <div class="col-lg-12">
+                    <div class="card">
+                        <ul class="nav nav-tabs2">
+                            <li class="nav-item"><a class="nav-link active show" data-toggle="tab"
+                                    href="#e_departments">Projects</a></li>
+                            <li class="nav-item" *ngIf='!projectAddObj.id'><a class="nav-link" data-toggle="tab"
+                                    href="#e_add">Add</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane" id="e_add">
+                                <form #pfrm="ngForm" novalidate>
+                                    <div class="body">
+                                        <div class="row clearfix">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Client Name:</label>
+                                                    <span style="color: red;">*</span>
+                                                    <select required class="form-control" placeholder="Clint Name"
+                                                        name='desg' #desg=ngModel [(ngModel)]="projectAddObj.clientId">
+                                                        <option  hidden [value]="" selected>Client Name</option>
+                                                        <option *ngFor="let cd of clientDetailsByStatus" value="{{cd.id}}">
+                                                            {{cd.name}}</option>
+                                                    </select>
+                                                    <span class="text-danger" [hidden]="!desg.errors.required"
+                                                        *ngIf="desg.errors && (desg.touched || desg.dirty)">This Field is Required
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Project Name:</label>
+                                                    <span style="color: red;">*</span>
+
+                                                    <input type="text" name="name"
+                                                        class="form-control" placeholder="Project Name"
+                                                        [(ngModel)]="projectAddObj.name" #name="ngModel" required>
+                                                    <span style="font-size: small" class="text-danger"
+                                                        [hidden]="!name.errors.required"
+                                                        *ngIf="name.errors && (name.touched || name.dirty)">
+                                                        This Field is Required</span>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Team Size:</label>
+                                                    <span style="color: red;">*</span>
+
+                                                    <input type="tel" min="0" maxlength="10000" pattern="[0-9]{0,8}"
+                                                        onkeypress="return (event.charCode >= 48 && event.charCode <= 57) "
+                                                        class="form-control" placeholder="Team Size" name="teamsize"
+                                                        #teamsize=ngModel required [(ngModel)]="projectAddObj.teamSize">
+                                                    <span class="text-danger" [hidden]="!teamsize.errors.required"
+                                                        *ngIf="teamsize.errors && (teamsize.touched || teamsize.dirty)">This Field is Required
+                                                    </span>
+                                                    <span class="text-danger" [hidden]="!teamsize.errors.pattern"
+                                                        *ngIf="teamsize.errors && (teamsize.touched || teamsize.dirty)">Please
+                                                        enter Team size</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-12" *ngIf='!projectAddObj.id'>
+                                                <button type="button" class="btn btn-primary" [disabled]="!pfrm.valid"
+                                                    (click)="saveProject()">ADD</button>
+                                            </div>
+                                            <div class="col-12" *ngIf='projectAddObj.id'>
+                                                <button type="button" class="btn btn-primary" [disabled]="!pfrm.valid"
+                                                    (click)="UpdateProjects()">Update</button>&nbsp;&nbsp;
+                                                <a href="/projects"><i class="fa fa-arrow-left">Back</i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="tab-pane show active" id="e_departments">
+                                <div>
+                                    <mat-form-field>
+                                        <input class="search" placeholder="Search" matInput
+                                            (keyup)="applyFilter($event.target.value)">
+                                    </mat-form-field>
+                                    <button class="excel" mat-raised-button color="primary"
+                                        (click)="exportTable()">Export</button>
+                                </div>
+                                <table id="Example table" mat-table [dataSource]="dataSource" matSort>
+
+                                    <ng-container matColumnDef="clientName">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Client Name</th>
+                                        <td *matCellDef="let row">{{row.clientName}}</td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="name">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Project Name</th>
+                                        <td *matCellDef="let row">{{row.name}}</td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="teamSize">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Team Size</th>
+                                        <td *matCellDef="let row">{{row.teamSize}}</td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="act">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
+                                        <td *matCellDef="let row">
+                                            <a data-toggle="tab" href="#e_add" (click)='getProjectsById(row.id)'
+                                                class="btn btn-sm btn-default" title="Edit"><i
+                                                    class="fa fa-edit"></i></a>
+                                                    &nbsp;
+                                            <mat-slide-toggle (change)="onChange($event,row.id)" class="example-margin"
+                                             checked="{{row.status}}">
+                                          </mat-slide-toggle>
+                                          <span *ngIf="row.status" style="color:black">Active</span>
+                                          <span *ngIf="!row.status" style="color:black">In Active</span>
+                                        </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef='displayedColumns'>
+                                    </tr>
+                                    <tr mat-row *matRowDef="let row;columns:displayedColumns"></tr>
+                                </table>
+                                <mat-paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[5, 10, 25,100]"
+                                    showFirstLastButtons>
+                                </mat-paginator>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

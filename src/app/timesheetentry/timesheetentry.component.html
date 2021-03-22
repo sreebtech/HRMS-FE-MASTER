@@ -1,0 +1,276 @@
+ 
+
+<div id="main-content"> 
+    <div class="container-fluid"> 
+        <div class="block-header"> 
+            <div class="row clearfix"> 
+                <div class="col-md-6 col-sm-12"> 
+                    <h1>Time Sheet</h1> 
+                </div> 
+                <div class="col-lg-12"> 
+                    <div class="card"> 
+                        <ul class="nav nav-tabs2"> 
+                            <li class="nav-item"><a class="nav-link active show" data-toggle="tab" 
+                                    href="#e_timesheet">TimeSheet</a></li> 
+                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#t_add">Add TimeSheet</a> 
+                            </li> 
+                        </ul> 
+                        <div class="tab-content"> 
+                            <div class="tab-pane" id="t_add"> 
+                                <form #tsfrm="ngForm" novalidate> 
+                                    <div class="container-fluid"> 
+                                        <div class="block-header"> 
+                                            <div class="row clearfix"> 
+                                                <div class="col-md-8 col-sm-12"> 
+                                                    <div class="row"> 
+                                                        <div class="col-md-4" style="text-align:left"> 
+                                                            <label>Select Date:</label> 
+                                                        </div> 
+                                                        <div class="col-md-4"> 
+                                                            <input type="text" autocomplete="off" [maxDate]="maxDayDate" 
+                                                                [(ngModel)]="date" bsDatepicker 
+                                                                [bsConfig]="{containerClass: 'theme-dark-blue'}" 
+ 
+                                                                class="form-control" required name="StartDate" 
+                                                                onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122)" 
+                                                                onkeydown="return(event.ctrlKey==17 && event.keyCode==86 && event.ctrlKey==67)"> 
+                                                        </div> 
+                                                    </div> 
+                                                </div> 
+                                            </div> 
+                                        </div> 
+                                    </div> 
+                                    <div class="tab-pane show active" id="e_departments"> 
+                                        <div class="table-responsive"> 
+                                            <table 
+                                                class="table table-hover js-basic-example dataTable table-custom spacing5 mb-0"> 
+                                                <thead> 
+                                                    <tr> 
+                                                        <th style="text-align:center">Project</th> 
+                                                        <th style="text-align:center">Task</th> 
+                                                        <th style="text-align:center">Start Date-End Date</th> 
+                                                      <!-- <th style="text-align:center">End Date</th>  -->
+                                                        <th style="text-align:center">Effort(Hrs)</th> 
+                                                        <th style="text-align:center">Cumulative Hours</th> 
+                                                        <th>{{date|date}}</th> 
+                                                        <th>In percentage(%)</th> 
+                                                        <th>Action</th> 
+                                                    </tr> 
+                                                </thead> 
+                                                <tbody> 
+                                                    <tr *ngFor="let td of taskDetails"> 
+                                                        <td> 
+                                                            <div class="form-group "> 
+                                                                <textarea disabled autocomplete="off" type="text" 
+                                                                    pattern="[a-zA-Z][a-zA-Z-,/\s]{2,100}" 
+                                                                    name="projectName" value="{{td.projectName}}"> 
+                                                                    </textarea> 
+                                                            </div> 
+                                                        </td> 
+                                                        <td> 
+                                                            <div class="form-group "> 
+                                                                <textarea #tid disabled autocomplete="off" type="text" 
+                                                                    name="task" 
+                                                                    value="{{td.task}}"></textarea> 
+                                                            </div> 
+                                                        </td> 
+                                                        <td> 
+                                                            <div class="form-group "> 
+                                                                <input disabled autocomplete="off" type="text" 
+                                                                    pattern="[a-zA-Z][a-zA-Z-,/\s]{2,100}" name="sdate" 
+                                                                    value="{{td.startDate|date}}-{{td.endDate|date}}"> 
+                                                            </div> 
+                                                        </td> 
+                                                      <!-- <td> 
+                                                        <div class="form-group "> 
+                                                          <input disabled autocomplete="off" type="text" 
+                                                                 pattern="[a-zA-Z][a-zA-Z-,/\s]{2,100}" name="sdate" 
+                                                                 value="{{td.endDate|date}}"> 
+                                                        </div> 
+                                                      </td>  -->
+ 
+                                                        <td> 
+                                                            <div class="form-group "> 
+                                                                <input disabled autocomplete="off" type="text" 
+                                                                    pattern="[a-zA-Z][a-zA-Z-,/\s]{2,100}" 
+                                                                    name="tskTime" class="form-control" 
+                                                                    value="{{td.taskTime}}" required> 
+                                                            </div> 
+                                                        </td> 
+                                                        <td> 
+                                                            <div class="form-group "> 
+                                                                <input disabled autocomplete="off" type="text" 
+                                                                    pattern="[a-zA-Z][a-zA-Z-,/\s]{2,100}" 
+                                                                    name="cummilativeHours" class="form-control" 
+                                                                    value="{{td.Hours}}" required> 
+                                                            </div> 
+                                                        </td> 
+                                                        <td> 
+                                                            <div class="form-group "> 
+                                                                <input #day1Hrs autocomplete="off" min="0" type="number" 
+                                                                    max="24" class="form-control" name="day1Hrs" 
+                                                                    required> 
+                                                            </div> 
+                                                        </td> 
+                                                        <td> 
+                                                            <div class="form-group "> 
+                                                                <input #prcntg autocomplete="off" min="0" maxlength="3" type="tel" pattern="[0-9]{0,8}" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) " 
+                                                                 class="form-control" name="prcntg" 
+                                                                    required> 
+                                                            </div> 
+                                                        </td> 
+                                                        <td> 
+                                                            <div class="feeds-left "> 
+                                                                <button type="button" class="btn btn-primary" 
+                                                                    (click)="addTimeSheet(td.projectid,td.taskId,day1Hrs,prcntg)">Submit</button> 
+ 
+                                                            </div> 
+                                                        </td> 
+                                                    </tr> 
+                                   <!--self assigned timesheet--> 
+                                                    <tr > 
+                                                      <td> 
+                                                        <div class="form-group "> 
+                                                                <!--<textarea  autocomplete="off" type="select"--> 
+                                                                          <!--pattern="[a-zA-Z][a-zA-Z-,/\s]{2,100}"--> 
+                                                                          <!--name="projectName" value="{{td.projectName}}">--> 
+                                                                    <!--</textarea>--> 
+                                                          <select class="select"   autocomplete="off" class="form-control" pattern="[a-zA-Z][a-zA-Z-,/\s]{2,100}" name="projectName" #projectName=ngModel 
+                                                                   [(ngModel)]="taskAddObj.projectId" [value]="13"> 
+                                                            <option  hidden [value]="" disabled selected>Select Project</option>
+                                                            <option  value="13">Miscellaneous</option>
+                                                            <!-- <option *ngFor="let cd of projectDetails" value="{{cd.id}}" >{{cd.name}}</option>  -->
+                                                          </select> 
+ 
+                                                        </div> 
+                                                      </td> 
+                                                      <td> 
+                                                        <div class="form-group "> 
+                                                                <textarea #tid  autocomplete="off" type="text" 
+                                                                          name="task" #projectName=ngModel [(ngModel)]="taskAddObj.description" 
+                                                                          value=""></textarea> 
+                                                        </div> 
+                                                      </td> 
+                                                      <td> 
+                                                        <div class="form-group "> 
+                                                          <input disabled autocomplete="off" type="text" 
+                                                                 pattern="[a-zA-Z][a-zA-Z-,/\s]{2,100}" name="sdate" 
+                                                                 value="{{date|date}}-{{date|date}}"> 
+                                                        <!--</div>--> 
+                                                          <!--<input type="text" autocomplete="off" [maxDate]="maxDate" [(ngModel)]="StartDate"--> 
+                                                                 <!--bsDatepicker [bsConfig]="{containerClass: 'theme-dark-blue'}"--> 
+                                                                 <!--class="form-control"--> 
+                                                                 <!--onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122)"--> 
+                                                                 <!--onkeydown="return(event.ctrlKey==17 && event.keyCode==86)" required name="StartDateone">--> 
+                                                        </div> 
+                                                      </td> 
+                                                      <!-- <td>  -->
+                                                        <!-- <div class="form-group "> 
+                                                          <input disabled autocomplete="off" type="text" 
+                                                                  pattern="[a-zA-Z][a-zA-Z-,/\s]{2,100}" name="sdate" 
+                                                                  value="{{date|date}}">  -->
+                                                          <!--<input type="text"  autocomplete="off" [maxDate]="maxDate" [(ngModel)]="EndDate"--> 
+                                                                 <!--bsDatepicker [bsConfig]="{containerClass: 'theme-dark-blue'}"--> 
+                                                                 <!--class="form-control"--> 
+                                                                 <!--onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122)"--> 
+                                                                 <!--onkeydown="return(event.ctrlKey==17 && event.keyCode==86)" required name="EndDate">--> 
+<!--  
+                                                        </div> 
+                                                      </td>  -->
+                                                      <td> 
+                                                        <div class="form-group "> 
+                                                          <input disabled autocomplete="off" type="text" 
+                                                                 pattern="[a-zA-Z][a-zA-Z-,/\s]{2,100}" 
+                                                                 name="tskTime" class="form-control" 
+                                                                 value="" required> 
+                                                        </div> 
+                                                      </td> 
+                                                      <td> 
+                                                        <div class="form-group "> 
+                                                          <input disabled autocomplete="off" type="text" 
+                                                                 pattern="[a-zA-Z][a-zA-Z-,/\s]{2,100}" 
+                                                                 name="cummilativeHours" class="form-control" 
+                                                                 value="" required> 
+                                                        </div> 
+                                                      </td> 
+                                                      <td> 
+                                                        <div class="form-group "> 
+                                                          <input [(ngModel)]="day3Hrs" #day2Hrs autocomplete="off" min="0" type="number" 
+                                                                 max="24" class="form-control" name="day2Hrs" 
+                                                                 required> 
+                                                        </div> 
+                                                      </td> 
+                                                      <td> 
+                                                        <div class="form-group "> 
+                                                          <input [(ngModel)]="prcntg1" #prcntg autocomplete="off" min="0" maxlength="3" type="tel" pattern="[0-9]{0,8}" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) " 
+                                                                 class="form-control" name="prcntg" 
+                                                                 required> 
+                                                        </div> 
+                                                      </td> 
+                                                      <td> 
+                                                        <div class="feeds-left "> 
+                                                          <button type="button" class="btn btn-primary" 
+                                                                  (click)="addTimeSheetself(taskAddObj.projectId,'tid',day2Hrs,prcntg)">Submit</button> 
+ 
+                                                        </div> 
+                                                      </td> 
+                                                    </tr> 
+                                                </tbody> 
+                                            </table> 
+                                        </div> 
+                                    </div> 
+                                </form> 
+                            </div> 
+ 
+                            <div class="tab-pane show active" id="e_timesheet"> 
+                                <div class="table-responsive"> 
+                                    <div> 
+                                        <mat-form-field> 
+                                            <input class="search" placeholder="Search" matInput 
+                                                (keyup)="applyFilter($event.target.value)"> 
+                                        </mat-form-field> 
+                                        <button class="excel" mat-raised-button color="primary" 
+                                            (click)="exportTable()">Export</button> 
+                                    </div> 
+                                    <table id="Example table" mat-table [dataSource]="dataSource" matSort> 
+ 
+                                        <ng-container matColumnDef="clientName-projectName"> 
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Project Name</th> 
+                                            <td *matCellDef="let row">{{row.projectName}}</td> 
+                                        </ng-container> 
+                                        <ng-container matColumnDef="taskphase-description"> 
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Task Description</th> 
+                                            <td *matCellDef="let row">{{row.description}}</td> 
+                                        </ng-container> 
+                                        <ng-container matColumnDef="workedDate|date"> 
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Worked Date</th> 
+                                            <td *matCellDef="let row">{{row.workedDate|date}}</td> 
+                                        </ng-container> 
+                                        <ng-container matColumnDef="hours"> 
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Hours</th> 
+                                            <td *matCellDef="let row">{{row.Hours}}</td> 
+                                        </ng-container> 
+                                        <ng-container matColumnDef="percentage"> 
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Percentage</th> 
+                                            <td *matCellDef="let row">{{row.percentage}}</td> 
+                                        </ng-container> 
+                                        <ng-container matColumnDef="status"> 
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th> 
+                                            <td *matCellDef="let row">{{row.status}}</td> 
+                                        </ng-container> 
+                                        <tr mat-header-row *matHeaderRowDef='displayedColumns'> 
+                                        </tr> 
+                                        <tr mat-row *matRowDef="let row;columns:displayedColumns"></tr> 
+                                    </table> 
+                                    <mat-paginator #paginator [length]="100" [pageSize]="10" 
+                                        [pageSizeOptions]="[5, 10, 25,100]" showFirstLastButtons> 
+                                    </mat-paginator> 
+                                </div> 
+                            </div> 
+                        </div> 
+                    </div> 
+                </div> 
+            </div> 
+        </div> 
+    </div> 
+</div> 

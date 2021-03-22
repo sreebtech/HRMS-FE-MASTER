@@ -1,0 +1,177 @@
+<div id="main-content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <div class="row clearfix">
+                <div class="col-md-6 col-sm-12">
+                    <h1>Departments</h1>
+                </div>
+                <div class="col-lg-12">
+                    <div class="card">
+                        <ul class="nav nav-tabs2">
+                            <li class="nav-item"><a class="nav-link active show" data-toggle="tab"
+                                    href="#e_departments">Departments</a></li>
+                            <li class="nav-item" *ngIf='!departmentAddObj.deptId'><a class="nav-link" data-toggle="tab"
+                                    href="#e_add">Add</a></li>
+
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane" id="e_add">
+                                <form #dfrm="ngForm" novalidate>
+                                    <div class="body">
+                                        <div class="row clearfix">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Department Name:</label>
+                                                    <span style="color: red;">*</span>
+
+                                                    <input type="text" name="name" maxlength="30" minlength="2"
+                                                        class="form-control" placeholder="Department Name"
+                                                        [(ngModel)]="departmentAddObj.deptName" #name="ngModel"
+                                                        required>
+                                                    <span style="font-size: small" class="text-danger"
+                                                        [hidden]="!name.errors.required"
+                                                        *ngIf="name.errors && (name.touched || name.dirty)">
+                                                        This field is Required</span>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Department Head:</label>
+                                                    <!-- <span style="color: red;">*</span> -->
+
+                                                    <input type="text" name="head" maxlength="30" minlength="3"
+                                                        class="form-control" placeholder="Department Head"
+                                                        [(ngModel)]="departmentAddObj.deptHead" #head="ngModel">
+                                                    <!-- <span style="font-size: small" class="text-danger"
+                                                        [hidden]="!head.errors.required"
+                                                        *ngIf="head.errors && (head.touched || head.dirty)">
+                                                        Name Required</span>
+                                                    <span style="font-size: small" class="text-danger"
+                                                        [hidden]="!head.errors.minlength || head?.errors.pattern"
+                                                        *ngIf="head.errors">
+                                                        Name with min 3 chars.</span> -->
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" >
+                                                    <label>No Of Employees:</label>
+                                                    <span style="color: red;">*</span>
+
+                                                    <input type="tel" min="0" maxlength="10000" pattern="[0-9]{0,8}"
+                                                        onkeypress="return (event.charCode >= 48 && event.charCode <= 57) "
+                                                        class="form-control" placeholder="No of Employee" name="empNo"
+                                                        #empNo=ngModel required
+                                                        [(ngModel)]="departmentAddObj.deptNoOfEmployees">
+                                                    <span class="text-danger" [hidden]="!empNo.errors.required"
+                                                        *ngIf="empNo.errors && (empNo.touched || empNo.dirty)">This
+                                                        Field is
+                                                        Required
+                                                    </span>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-12" *ngIf='!departmentAddObj.deptId'>
+                                                <button type="button" class="btn btn-primary" [disabled]="!dfrm.valid"
+                                                    (click)="saveDepartment()">ADD</button>
+                                            </div>
+                                            <div class="col-12" *ngIf='departmentAddObj.deptId'>
+                                                <button type="button" class="btn btn-primary" [disabled]="!dfrm.valid"
+                                                    (click)="UpdateDepartment()">Update</button>&nbsp;&nbsp;
+                                                <a href="/departments"><i class="fa fa-arrow-left">Back</i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="tab-pane show active" id="e_departments">
+                                <div>
+                                    <mat-form-field>
+                                        <input class="search" placeholder="search" matInput
+                                            (keyup)="applyFilter($event.target.value)">
+                                    </mat-form-field>
+                                    <button class="excel" mat-raised-button color="primary"
+                                        (click)="downloadPdf()">Export</button>
+                                </div>
+                                <div id="reportcontent" class="p-col-8 p-offset-2">
+                                    <table mat-table [dataSource]="dataSource" matSort>
+                                        <ng-container matColumnDef="deptName">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Department Name</th>
+                                            <td *matCellDef="let row">{{row.deptName}}</td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="deptHead">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Department Head</th>
+                                            <td *matCellDef="let row">{{row.deptHead}}</td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="deptNoOfEmployees">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>No of employees</th>
+                                            <td *matCellDef="let row">{{row.deptNoOfEmployees}}</td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="Action">
+                                            <th mat-header-cell *matHeaderCellDef>Action</th>
+                                            <td *matCellDef="let row">
+                                                <a data-toggle="tab" href="#e_add"
+                                                    (click)='getDepartmentsById(row.deptId)'
+                                                    class="btn btn-sm btn-default" title="Edit"><i
+                                                        class="fa fa-edit"></i></a>
+                                            </td>
+                                        </ng-container>
+                                        <!-- <ng-container matColumnDef="status">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                                        <td *matCellDef="let row">
+                                          <mat-slide-toggle (change)="onChange($event,row.id)" class="example-margin" [color]="color" [checked]="row.status">
+                                          </mat-slide-toggle>
+                                        </td>
+                                      </ng-container> -->
+                                        <tr mat-header-row *matHeaderRowDef='displayedColumns'>
+                                        </tr>
+                                        <tr mat-row *matRowDef="let row;columns:displayedColumns"></tr>
+                                    </table>
+                                </div>
+                                <mat-paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[5, 10, 25,100]"
+                                    showFirstLastButtons>
+                                </mat-paginator>
+                            </div>
+                            <!-- <div class="tab-pane show active" id="e_departments">
+                                <div class="table-responsive">
+                                    <table #dataTable class="display" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>Department Name</th>
+                                                <th>Department Head</th>
+                                                <th>Total Employee</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let ds of departmentDetails" role="row" class="odd">
+                                                <td class="sorting_1">
+                                                    {{ds.deptName}}
+                                                </td>
+                                                <td>
+                                                    {{ds.deptHead}}
+                                                </td>
+                                                <td>
+                                                    {{ds.deptNoOfEmployees}}
+                                                </td>
+                                                <td>
+                                                    <a data-toggle="tab" href="#e_add"
+                                                        (click)='getDepartmentsById(ds.deptId)'
+                                                        class="btn btn-sm btn-default" title="Edit"><i
+                                                            class="fa fa-edit"></i></a>
+
+                                                </td>
+                                            </tr>
+
+                                            </tbody>
+                                    </table>
+
+                                </div>
+                            </div> -->
+                        <!--</div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

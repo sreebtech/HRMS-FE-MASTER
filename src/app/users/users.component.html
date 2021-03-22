@@ -1,0 +1,367 @@
+<div id="main-content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <div class="col-md-6 col-sm-12">
+                <h1>Users</h1>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="card">
+                    <ul class="nav nav-tabs2">
+                        <li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#Users">Users</a>
+                        </li>
+                        <li class="nav-item" *ngIf='!userAddObj.id'><a class="nav-link" data-toggle="tab"
+                                href="#addUser">Add User</a></li>
+                    </ul>
+                    <div class="tab-content mt-0">
+                        <div class="tab-pane show active" id="Users">
+                            <div>
+                                <mat-form-field>
+                                    <input class="search" placeholder="Search" matInput
+                                        (keyup)="applyFilter($event.target.value)">
+                                </mat-form-field>
+                                <button class="excel" mat-raised-button color="primary"
+                                    (click)="exportTable()">Export</button>
+                            </div>
+                            <table class="responsive-table" id="Example table" mat-table [dataSource]="dataSource"
+                                matSort>
+
+                                <ng-container matColumnDef="empId">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Employee Id</th>
+                                    <td *matCellDef="let row">{{row.empId}}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="empName">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                                    <td *matCellDef="let row">{{row.empName}}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="Designation">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Role</th>
+                                    <td *matCellDef="let row">{{row.Designation}}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="managername">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Manager Name</th>
+                                    <td *matCellDef="let row">{{row.managername}}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="departmentName">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Department Name</th>
+                                    <td *matCellDef="let row">{{row.departmentName}}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="contactNumber">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Contact Number</th>
+                                    <td *matCellDef="let row">{{row.contactNumber}}</td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="act">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
+                                    <td *matCellDef="let row">
+                                        <a data-toggle="tab" href="#addUser" (click)='getUsersById(row.id)'
+                                            class="btn btn-sm btn-default" title="Edit"><i class="fa fa-edit"></i></a>
+                                            &nbsp;
+                                            <mat-slide-toggle (change)="onChange($event,row.id)" class="example-margin"
+                                            checked="{{row.status}}">
+                                          </mat-slide-toggle>
+                                          <span *ngIf="row.status" style="color:black">Active</span>
+                                          <span *ngIf="!row.status" style="color:black">In Active</span>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef='displayedColumns'>
+                                </tr>
+                                <tr mat-row *matRowDef="let row;columns:displayedColumns"></tr>
+                            </table>
+                            <mat-paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[5, 10, 25,100]"
+                                showFirstLastButtons>
+                            </mat-paginator>
+                        </div>
+
+
+                        <div class="tab-pane" id="addUser">
+                            <form #frm="ngForm" novalidate>
+
+                                <div class="body mt-2" style="color: #010101;">
+                                    <div class="row clearfix">
+                                        <div class="col-lg-3 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label>Employee Id:</label>
+                                                <span style="color: red;">*</span>
+
+                                                <input type="text" name="empid" class="form-control"
+                                                    placeholder="Employee Id" [(ngModel)]="userAddObj.empId"
+                                                    #empid="ngModel" maxlength="20" minlength="2" required>
+                                                <span style="font-size: small" class="text-danger"
+                                                    [hidden]="!empid.errors.required"
+                                                    *ngIf="empid.errors && (empid.touched || empid.dirty)">
+                                                    This Field is Required</span>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label>Name:</label>
+                                                <span style="color: red;">*</span>
+
+                                                <input type="text" name="name" maxlength="30" class="form-control"
+                                                    placeholder="Name" [(ngModel)]="userAddObj.empName" #name="ngModel"
+                                                    required>
+                                                <span style="font-size: small" class="text-danger"
+                                                    [hidden]="!name.errors.required"
+                                                    *ngIf="name.errors && (name.touched || name.dirty)">
+                                                    This Field is Required</span>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label>Email:</label>
+                                                <span style="color: red;">*</span>
+
+                                                <input type="email" maxlength="40" name="empemail"
+                                                    pattern="[a-zA-Z0-9._]{2,}@[a-zA-Z]{2,}\.[a-zA-Z]{2,3}$"
+                                                    class="form-control" placeholder="Email"
+                                                    [(ngModel)]="userAddObj.empEmail" #empemail="ngModel" required>
+                                                <span style="font-size: small" class="text-danger"
+                                                    [hidden]="!empemail.errors.required"
+                                                    *ngIf="empemail.errors && (empemail.touched || empemail.dirty)">This
+                                                    Field is Required</span>
+                                                <span style="font-size: small" class="text-danger"
+                                                    [hidden]="!empemail.errors.pattern"
+                                                    *ngIf="empemail.errors && (empemail.touched || empemail.dirty)">Please
+                                                    Enter Valid Email </span>
+                                                <span style="font-size: small" class="text-danger"
+                                                    [hidden]="!empemail.errors.maxlength || empemail?.errors.pattern"
+                                                    *ngIf="empemail.errors">
+                                                    valid email.</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label>Role:</label>
+                                                <span style="color: red;">*</span>
+
+                                                <select required class="form-control" placeholder="Designation"
+                                                    name='desg' #desg=ngModel [(ngModel)]="userAddObj.empDesignation">
+                                                    <option hidden [value]="" selected>Role</option>
+                                                    <option *ngFor="let role of RolesDetails" value="{{role.id}}">
+                                                        {{role.NAME}}</option>
+                                                </select>
+                                                <span class="text-danger" [hidden]="!desg.errors.required"
+                                                    *ngIf="desg.errors && (desg.touched || desg.dirty)">Please
+                                                    select Role
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label>Department:</label>
+                                                <span style="color: red;">*</span>
+                                                <select required class="form-control" placeholder="Department"
+                                                    name='dept' #dept=ngModel [(ngModel)]="userAddObj.departmentId">
+                                                    <option hidden [value]="" selected>Select Department</option>
+                                                    <option *ngFor="let dept of departmentDetails"
+                                                        value="{{dept.deptId}}">
+                                                        {{dept.deptName}}</option>
+                                                </select>
+                                                <span class="text-danger" [hidden]="!dept.errors.required"
+                                                    *ngIf="dept.errors && (dept.touched || dept.dirty)">Please
+                                                    select Department
+                                                </span>
+                                                <!-- <input type="text" maxlength="50"  name="State" #State=ngModel required class="form-control" placeholder="State"
+                                                [(ngModel)]="userAddObj.state">
+                                                <span class="text-danger" [hidden]="!State.errors.required" *ngIf="State.errors && (State.touched || State.dirty)">State
+                                                    Required
+                                           </span> -->
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label>Manager Name:</label>
+                                                <span style="color: red;">*</span>
+                                                <select required class="form-control" placeholder="Manager Name"
+                                                    name='mngr' #mngr=ngModel [(ngModel)]="userAddObj.managerId">
+                                                    <option hidden [value]="" selected>Manager</option>
+                                                    <option *ngFor="let role of userDetails" value="{{role.empId}}">
+                                                        {{role.empName}}</option>
+                                                </select>
+                                                <span class="text-danger" [hidden]="!mngr.errors.required"
+                                                    *ngIf="mngr.errors && (mngr.touched || mngr.dirty)">Please
+                                                    select Manager
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label>Blood Group:</label>
+                                                <span style="color: red;">*</span>
+
+                                                <select required class="form-control" placeholder="Blood Group"
+                                                    name="bld" #bld=ngModel [(ngModel)]="userAddObj.bloodGroup">
+                                                    <option hidden [value]="" selected="selected">Select Blood Group</option>
+                                                    <option>A+</option>
+                                                    <option>A-</option>
+                                                    <option>B+</option>
+                                                    <option>B-</option>
+                                                    <option>O+</option>
+                                                    <option>O-</option>
+                                                    <option>AB+</option>
+                                                    <option>AB-</option>
+                                                </select>
+                                                <span class="text-danger" [hidden]="!bld.errors.required"
+                                                    *ngIf="bld.errors && (bld.touched || bld.dirty)">This Field is
+                                                    Required
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label>Contact Number:</label>
+                                                <span style="color: red;">*</span>
+
+                                                <input type="tel" minlength="10" maxlength="10" autocomplete="off"
+                                                    pattern="([0-9])+(?:-?\d){8,15}" required class="form-control"
+                                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                                    #mobile="ngModel" [(ngModel)]="userAddObj.contactNumber"
+                                                    name="mobile" placeholder="Contact Number">
+                                                <span class="text-danger" [hidden]="!mobile.errors.required"
+                                                    *ngIf="mobile.errors && (mobile.touched || mobile.dirty)">This Field
+                                                    is Required
+                                                </span>
+                                                <span class="text-danger" [hidden]="!mobile.errors.pattern"
+                                                    *ngIf="mobile.errors && (mobile.touched || mobile.dirty)">Please
+                                                    enter a valid mobile number(min 10 digits)</span>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label>Emergency Contact:</label>
+                                                <span style="color: red;">*</span>
+
+                                                <input type="tel" minlength="10" maxlength="10" autocomplete="off"
+                                                    pattern="([0-9])+(?:-?\d){8,15}" required class="form-control"
+                                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                                    #emergncy="ngModel" [(ngModel)]="userAddObj.emergencyContact"
+                                                    name="emergncy" placeholder="Emergency Contact Number">
+                                                <span class="text-danger" [hidden]="!emergncy.errors.required"
+                                                    *ngIf="emergncy.errors && (emergncy.touched || emergncy.dirty)">This
+                                                    Field is Required
+                                                </span>
+                                                <span class="text-danger" [hidden]="!emergncy.errors.pattern"
+                                                    *ngIf="emergncy.errors && (emergncy.touched || emergncy.dirty)">Please
+                                                    enter a valid mobile number(min 10 digits)</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label>Address line 1:</label>
+                                                <span style="color: red;">*</span>
+
+                                                <input type="text" maxlength="200" class="form-control"
+                                                    placeholder="Address line 1" [(ngModel)]="userAddObj.addr1"
+                                                    name="add1" #add1=ngModel required>
+                                                <span class="text-danger" [hidden]="!add1.errors.required"
+                                                    *ngIf="add1.errors && (add1.touched || add1.dirty)">This Field is
+                                                    Required
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label>Address line 2:</label>
+                                                <span style="color: red;">*</span>
+
+                                                <input type="text" maxlength="200" class="form-control"
+                                                    placeholder="Address line 2" [(ngModel)]="userAddObj.addr2"
+                                                    name="add2" #add2=ngModel required>
+                                                <span class="text-danger" [hidden]="!add2.errors.required"
+                                                    *ngIf="add2.errors && (add2.touched || add2.dirty)">This Field is
+                                                    Required
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label>Address line 3:</label>
+                                                <span style="color: red;">*</span>
+
+                                                <input type="text" maxlength="200" class="form-control"
+                                                    placeholder="Address line 3" [(ngModel)]="userAddObj.addr3"
+                                                    name="add3" #add3=ngModel required>
+                                                <span class="text-danger" [hidden]="!add3.errors.required"
+                                                    *ngIf="add3.errors && (add3.touched || add3.dirty)">This Field is
+                                                    Required
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label>City:</label>
+                                                <span style="color: red;">*</span>
+
+                                                <input type="text" maxlength="50" name="city" #city=ngModel required
+                                                    class="form-control" placeholder="City"
+                                                    [(ngModel)]="userAddObj.city">
+                                                <span class="text-danger" [hidden]="!city.errors.required"
+                                                    *ngIf="city.errors && (city.touched || city.dirty)">This Field is
+                                                    Required
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label>State:</label>
+                                                <span style="color: red;">*</span>
+
+                                                <input type="text" maxlength="50" name="State" #State=ngModel required
+                                                    class="form-control" placeholder="State"
+                                                    [(ngModel)]="userAddObj.state">
+                                                <span class="text-danger" [hidden]="!State.errors.required"
+                                                    *ngIf="State.errors && (State.touched || State.dirty)">This Field is
+                                                    Required
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-12">
+                                            <div class="form-group">
+                                                <label>Pincode:</label>
+                                                <span style="color: red;">*</span>
+
+                                                <input type="tel" min="0" maxlength="6" pattern="[0-9]{0,8}"
+                                                    onkeypress="return (event.charCode >= 48 && event.charCode <= 57) "
+                                                    class="form-control" placeholder="Pincode" name="pin" #pin=ngModel
+                                                    required [(ngModel)]="userAddObj.pincode">
+                                                <span class="text-danger" [hidden]="!pin.errors.required"
+                                                    *ngIf="pin.errors && (pin.touched || pin.dirty)">This Field is
+                                                    Required
+                                                </span>
+                                                <span class="text-danger" [hidden]="!pin.errors.pattern"
+                                                    *ngIf="pin.errors && (pin.touched || pin.dirty)">Please
+                                                    enter a valid Pincode</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-12" *ngIf='!userAddObj.id'>
+                                            <label> </label>
+
+                                            <input type="checkbox" name="vehicle1" value="Bike" [(ngModel)]="isCheck"
+                                                isChecked=false style="margin-top: 40px"> Is Admin<br>
+
+                                        </div>
+                                        <div class="col-12" *ngIf='!userAddObj.id'>
+                                            <button type="button" class="btn btn-primary" [disabled]="!frm.valid"
+                                                (click)="saveUser()">ADD</button>
+                                        </div>
+                                        <div class="col-12" *ngIf='userAddObj.id'>
+                                            <button type="button" class="btn btn-primary" [hidden]="!frm.valid"
+                                                (click)="UpdateUsers()">Update</button>&nbsp;&nbsp;
+
+                                            <a href="/user"><i class="fa fa-arrow-left">Back</i></a>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

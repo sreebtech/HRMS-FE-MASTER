@@ -1,0 +1,96 @@
+<div id="main-content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <div class="row clearfix">
+                <div class="col-md-6 col-sm-12">
+                    <h1>Dashboard</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-6 col-md-4 col-xl-2">
+                <div *ngIf="(user[0].empDesignation==7||user[0].empDesignation==9)" class="card" style="background-color:green">
+                    <div class="body ribbon">
+                        <div class="ribbon-box green">5</div>
+                        <a  routerLink="/user" class="my_sort_cut text-muted">
+                            <i class="icon-users" style="color: green;"></i>
+                            <span>Users</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="card" style="background-color:red">
+                    <div class="body">
+                        <a routerLink="/holidays" class="my_sort_cut text-muted">
+                            <i class="icon-like" style="color: red;"></i>
+                            <span>Holidays</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="card" style="background-color:orange">
+                    <div class="body ribbon">
+                        <div class="ribbon-box orange">8</div>
+                        <a routerLink="/timesheetentry" class="my_sort_cut text-muted">
+                            <i class="icon-calendar" style="color: orange;"></i>
+                            <span>Time Sheet</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-md-4 col-xl-2">
+                <div *ngIf="(user[0].empDesignation==4 || user[0].empDesignation==3 ||user[0].empDesignation==9)" class="card" style="background-color:blue">
+                    <div class="body">
+                        <a routerLink="/Reports" class="my_sort_cut text-muted">
+                            <i class="icon-pie-chart" style="color: blue;"></i>
+                            <span>Reports</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div >
+            <h4 class="Statistics">Work Statistics</h4>
+            <div class="row">
+                <div>
+                    <label>Select Date:</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" autocomplete="off" [maxDate]="maxDayDate" [(ngModel)]="dateGraph" bsDatepicker
+                        [bsConfig]="{containerClass: 'theme-dark-blue'}" class="form-control" required name="dateGraph"
+                        onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122)"
+                        onkeydown="return(event.ctrlKey==17 && event.keyCode==86)">
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-primary" (click)="getGraph(dateGraph)">Submit</button>
+                </div>
+            </div>
+            <!-- <p-toast [style]="{marginTop: '5em'}"></p-toast> -->
+            <div class="row">
+                <div class=" col-md-8">
+                    <p-chart type="bar" [data]="dataGraph" [options]="options" (onDataSelect)="selectData($event)">
+                    </p-chart>
+                </div>
+               
+
+                <div class=" col-md-3" style="color: crimson;margin-top: 34px;">
+                    <p style="float: left">Worked Date &nbsp;&nbsp;</p>
+                    <p>Hours</p>
+                    <div *ngFor="let gsdl of graphDataList">
+                        <p class="graph" style=" color: blue;  float: left">{{gsdl.workedDate}} &nbsp;&nbsp;&nbsp;</p>
+                        <p class="graph" style="color: blue;">{{gsdl.hours}}</p>
+
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="row">
+                    <p-chart type="pie" [data]="data" (onDataSelect)="selectData($event)" ></p-chart>
+            </div> -->
+        </div>
+    </div>
+</div>

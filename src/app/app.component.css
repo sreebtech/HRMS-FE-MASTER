@@ -1,0 +1,53 @@
+#left-sidebar {
+    top : 0%
+}
+
+@media screen and (min-width: 330px) and (max-width: 375px) {
+    .custom-scroll {
+        margin-top:72px;
+        position: relative;
+    }
+    body {
+        overflow-x: auto;
+    }
+
+    }
+    @media screen and (min-width: 380px) and (max-width: 414px) {
+        .custom-scroll {
+            margin-top:72px;
+            position: relative;
+        }
+
+
+        }
+    @media screen and (min-width: 300px) and (max-width: 320px) {
+        body {
+            overflow-x: auto;
+        }
+        .custom-scroll {
+            margin-top:72px;
+            position: relative;
+        }
+
+            }
+    @media screen and (min-width: 420px) and (max-width: 800px) {
+        .custom-scroll {
+            margin-top:72px;
+            position: relative;
+        }
+        body {
+            overflow-x: auto;
+        }
+                }
+    @media screen and (min-width: 800px) and (max-width: 1030px) {
+        .custom-scroll {
+            margin-top:72px;
+            position: relative;
+        }
+        body {
+            overflow-x: auto;
+        }
+
+                        }
+
+
